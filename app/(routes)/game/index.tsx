@@ -15,23 +15,20 @@ import {
   cancelAnimation,
 } from 'react-native-reanimated';
 import { useEffect, useState } from 'react';
-import { GestureHandlerRootView, GestureDetector, Gesture } from 'react-native-gesture-handler';
-import { GameTheme, PHYSICS } from '@/const';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { DIMENSION, GameTheme, PHYSICS } from '@/const';
 
-const pipeWidth = 104;
-const pipeHeight = 640;
-
-const App = () => {
+const GameScreen = () => {
   const { width, height } = useWindowDimensions();
   const [score, setScore] = useState(0);
 
-  const theme = GameTheme.cityNight;
+  const theme = { map: GameTheme.map.cityNight, bird: GameTheme.bird.bird_yellow };
 
-  const bg = useImage(theme.bg);
+  const bg = useImage(theme.map.bg);
   const bird = useImage(theme.bird);
-  const pipeBottom = useImage(theme.pipeBottom);
-  const pipeTop = useImage(theme.pipeTop);
-  const base = useImage(theme.base);
+  const pipeBottom = useImage(theme.map.pipeBottom);
+  const pipeTop = useImage(theme.map.pipeTop);
+  const base = useImage(theme.map.base);
 
   const gameOver = useSharedValue(false);
   const pipeX = useSharedValue(width);
@@ -53,15 +50,15 @@ const App = () => {
     {
       x: pipeX.value,
       y: bottomPipeY.value,
-      h: pipeHeight,
-      w: pipeWidth,
+      h: DIMENSION.PIPE.height,
+      w: DIMENSION.PIPE.width,
     },
     // top pipe
     {
       x: pipeX.value,
       y: topPipeY.value,
-      h: pipeHeight,
-      w: pipeWidth,
+      h: DIMENSION.PIPE.height,
+      w: DIMENSION.PIPE.width,
     },
   ]);
 
@@ -199,15 +196,50 @@ const App = () => {
         <Image image={bg} width={width} height={height} fit={'cover'} />
 
         {/* Pipes */}
-        <Image image={pipeTop} y={topPipeY} x={pipeX} width={pipeWidth} height={pipeHeight} />
-        <Image image={pipeBottom} y={bottomPipeY} x={pipeX} width={pipeWidth} height={pipeHeight} />
+        <Image
+          image={pipeTop}
+          y={topPipeY}
+          x={pipeX}
+          width={DIMENSION.PIPE.width}
+          height={DIMENSION.PIPE.height}
+        />
+        <Image
+          image={pipeBottom}
+          y={bottomPipeY}
+          x={pipeX}
+          width={DIMENSION.PIPE.width}
+          height={DIMENSION.PIPE.height}
+        />
 
         {/* Base */}
-        <Image image={base} width={width} height={150} y={height - 75} x={0} fit={'cover'} />
+        <Image
+          image={base}
+          width={width}
+          height={DIMENSION.BASE.height}
+          y={height - 75}
+          x={0}
+          fit={'cover'}
+        />
 
         {/* Bird */}
         <Group transform={birdTransform} origin={birdOrigin}>
-          <Image image={bird} y={birdY} x={birdX} width={64} height={48} />
+          <Text
+            y={birdY}
+            x={birdX}
+            text={'LegendX'}
+            font={matchFont({
+              fontFamily: 'serif',
+              fontSize: 12,
+              fontWeight: '900',
+            })}
+          />
+          <Image
+            image={bird}
+            y={birdY}
+            x={birdX}
+            width={DIMENSION.BIRD.width}
+            height={DIMENSION.BIRD.height}
+          />
         </Group>
 
         {/* Sim */}
@@ -218,4 +250,4 @@ const App = () => {
     </GestureDetector>
   );
 };
-export default App;
+export default GameScreen;
